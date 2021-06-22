@@ -10,6 +10,7 @@ def calc_accuracy(test_set, classifier):
         predicted = classifier.predict(test_set[key][0:-1])
         if real == predicted:
             correct += 1.0
+
     return correct/total
 
 
@@ -19,8 +20,28 @@ if __name__ == '__main__':
     train_file_name = "./dataset/amazon_cells_labelled_train.txt"
     test_file_name = "./dataset/amazon_cells_labelled_test.txt"
     data = file_reader.FileReader(file_name)
+
     # boolean
     train_set, _ = data.build_set("boolean", train_file_name)
     test_set, _ = data.build_set("boolean", test_file_name)
     classifier = rocchio_classifier.RocchioClassifier(train_set)
+    print("Accuracy results:")
     print("Boolean:", '{:.3f}'.format(calc_accuracy(test_set, classifier)))
+
+    # tf
+    train_set, _ = data.build_set("tf", train_file_name)
+    test_set, _ = data.build_set("tf", test_file_name)
+    classifier = rocchio_classifier.RocchioClassifier(train_set)
+    print("tf:", '{:.3f}'.format(calc_accuracy(test_set, classifier)))
+
+    # tfidf
+    train_set, _ = data.build_set("tfidf", train_file_name)
+    test_set, _ = data.build_set("tfidf", test_file_name)
+    classifier = rocchio_classifier.RocchioClassifier(train_set)
+    print("tfidf:", '{:.3f}'.format(calc_accuracy(test_set, classifier)))
+
+    # tfidf with cosine similarity
+    train_set, _ = data.build_set("tfidf", train_file_name)
+    test_set, _ = data.build_set("tfidf", test_file_name)
+    classifier = rocchio_classifier.RocchioClassifier(train_set, "cosine")
+    print("tfidf with cosine similarity:", '{:.3f}'.format(calc_accuracy(test_set, classifier)))
